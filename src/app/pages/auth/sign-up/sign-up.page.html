@@ -1,0 +1,51 @@
+<app-header backButton="/auth" title="Register"></app-header>
+
+<ion-content>
+  <div class="d-flex-center">
+    <form [formGroup]="form" class="auth-form" (submit)="submit()" (keypress.enter)="submit()">
+      <app-logo></app-logo>
+    <!-- ////////////// NAME INPUT ////////////// -->
+      <app-custom-input icon="person-outline" autocomplete="name" [control]="form.controls.name" type="text"
+        label="Name"></app-custom-input>
+      @if(form.controls.name.errors && form.controls.name.touched){
+      <div class="validators">
+        @if(form.controls.name.errors['required']){
+        <div>Name is required</div>
+        }
+        @if(form.controls.name.errors['minLength']){
+        <div>The name must be at least 4 characters long</div>
+        }
+      </div>
+      }
+
+      <app-custom-input icon="mail-outline" autocomplete="email" [control]="form.controls.email" type="email"
+        label="Email"></app-custom-input>
+      @if(form.controls.email.errors && form.controls.email.touched){
+      <div class="validators">
+        @if(form.controls.email.errors['required']){
+        <div>Email is required</div>
+        }
+        @if(form.controls.email.errors['email']){
+        <div>Type a valid email</div>
+        }
+      </div>
+      }
+    <!-- ////////////// PASSWORD INPUT ////////////// -->
+      <app-custom-input icon="lock-closed-outline" [control]="form.controls.password" type="password"
+        label="Password"></app-custom-input>
+      @if(form.controls.password.errors && form.controls.password.touched){
+      <div class="validators">
+        @if(form.controls.password.errors['required']){
+        <div>Password is required</div>
+        }
+      </div>
+      }
+
+      <ion-button expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
+        Register
+        <ion-icon slot="end" name="person-add-outline"></ion-icon>
+      </ion-button>
+
+    </form>
+  </div>
+</ion-content>
