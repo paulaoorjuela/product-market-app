@@ -7,37 +7,45 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { mailOutline, alertCircleOutline, arrowForward } from 'ionicons/icons';
+import { checkmarkCircleOutline } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { CustomInputComponent } from 'src/app/components/custom-input/custom-input.component';
 import { LogoComponent } from 'src/app/components/logo/logo.component';
 import { RouterLink } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { User } from 'src/app/models/user.model';
 import { UtilsService } from 'src/app/services/utils.service';
-import { IonIcon, IonContent, IonButton } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonButton,
+  IonIcon,
+} from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-forgot-password',
-  templateUrl: './forgot-password.page.html',
-  styleUrls: ['./forgot-password.page.scss'],
+  selector: 'app-add-update-product',
+  templateUrl: './add-update-product.component.html',
+  styleUrls: ['./add-update-product.component.scss'],
   standalone: true,
   imports: [
-    IonIcon,
-    IonContent,
-    IonButton,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterLink,
     HeaderComponent,
-    CustomInputComponent,
-    LogoComponent,
+    IonContent,
+    IonButton,
+    IonIcon,
+    CustomInputComponent
   ],
 })
-export class ForgotPasswordPage implements OnInit {
+export class AddUpdateProductComponent implements OnInit {
   form = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    id: new FormControl(''),
+    image: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    price: new FormControl('', [Validators.required, Validators.min(0)]),
+    soldUnits: new FormControl('', [Validators.required, Validators.min(0)]),
   });
 
   constructor(
@@ -45,9 +53,7 @@ export class ForgotPasswordPage implements OnInit {
     private utilsService: UtilsService
   ) {
     addIcons({
-      arrowForward,
-      mailOutline,
-      alertCircleOutline,
+      checkmarkCircleOutline
     });
   }
 
@@ -57,24 +63,18 @@ export class ForgotPasswordPage implements OnInit {
     if (this.form.valid) {
       const loading = await this.utilsService.loading();
       await loading.present();
+
       this.firebaseService
-        .sendRecoveryEmail(this.form.value.email)
-        .then((res) => {
-          this.utilsService.presentToast({
-            message: 'Send! please check your email inbox',
-            duration: 1500,
-            color: 'primary',
-            position: 'middle',
-            icon: 'mail-outline',
-          });
-          this.utilsService.routerLink('/auth');
-          this.form.reset();
+        .signup(this.form.value as User)
+        .then(async (res) => {
+          await this.firebaseService.updateUser(this.form.value.name);
+          let id = res.user.uid;
         })
         .catch((error) => {
           console.log(error);
           this.utilsService.presentToast({
             message:
-              'No user found with this email',
+              'Invalid credentials, please check your email and password',
             duration: 2500,
             color: 'primary',
             position: 'middle',

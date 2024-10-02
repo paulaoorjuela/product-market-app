@@ -1,0 +1,49 @@
+<app-header [isModal]="true" title="Add product"></app-header>
+
+<ion-content>
+  <form [formGroup]="form" class="ion-padding ion-text-center" (submit)="submit()" (keypress.enter)="submit()">
+    <!-- ////////////// NAME INPUT ////////////// -->
+    <app-custom-input autocomplete="name" [control]="form.controls.name" type="text" label="Name"></app-custom-input>
+    @if(form.controls.name.errors && form.controls.name.touched){
+    <div class="validators">
+      @if(form.controls.name.errors['required']){
+      <div>Name is required</div>
+      }
+      @if(form.controls.name.errors['minLength']){
+      <div>The name must be at least 4 characters long</div>
+      }
+    </div>
+    }
+
+    <!-- ////////////// PRICE INPUT ////////////// -->
+    <app-custom-input [control]="form.controls.price" type="number" label="Price"></app-custom-input>
+    @if(form.controls.price.errors && form.controls.price.touched){
+    <div class="validators">
+      @if(form.controls.price.errors['required']){
+      <div>Price is required</div>
+      }
+      @if(form.controls.price.errors['min']){
+      <div>The minimum price must be 0</div>
+      }
+    </div>
+    }
+
+    <!-- ////////////// SOLD UNITS INPUT ////////////// -->
+    <app-custom-input [control]="form.controls.soldUnits" type="number" label="Sold units"></app-custom-input>
+    @if(form.controls.soldUnits.errors && form.controls.soldUnits.touched){
+    <div class="validators">
+      @if(form.controls.soldUnits.errors['required']){
+      <div>sold inits are required</div>
+      }
+      @if(form.controls.soldUnits.errors['min']){
+      <div>The minimum units must be 0</div>
+      }
+    </div>
+    }
+    <ion-button mode="ios" class="ion-margin" type="submit" [disabled]="form.invalid">
+      Add product
+      <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+    </ion-button>
+
+  </form>
+</ion-content>

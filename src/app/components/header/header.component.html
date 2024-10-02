@@ -1,8 +1,15 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
+      <!-- go back button -->
       @if (backButton) {
       <ion-back-button [defaultHref]="backButton"></ion-back-button>
+      }
+      <!-- dismiss modal button -->
+      @if(isModal){
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
       }
     </ion-buttons>
     <ion-title>
