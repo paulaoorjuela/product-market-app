@@ -2,6 +2,23 @@
 
 <ion-content>
   <form [formGroup]="form" class="ion-padding ion-text-center" (submit)="submit()" (keypress.enter)="submit()">
+
+    <!-- if an image has been upload -->
+    @if(form.value.image){
+    <ion-avatar>
+      <img [src]="form.value.image" />
+    </ion-avatar>
+    }@else{
+    <!-- if there is no image -->
+    <ion-icon class="image-icon" name="image-outline"></ion-icon>
+    }
+    <br>
+
+    <!-- ////////////// IMAGE BUTTON/INPUT ////////////// -->
+    <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
+      Take / Select picture
+    </ion-button>
+
     <!-- ////////////// NAME INPUT ////////////// -->
     <app-custom-input autocomplete="name" [control]="form.controls.name" type="text" label="Name"></app-custom-input>
     @if(form.controls.name.errors && form.controls.name.touched){

@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline } from 'ionicons/icons';
+import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { CustomInputComponent } from 'src/app/components/custom-input/custom-input.component';
 import { LogoComponent } from 'src/app/components/logo/logo.component';
@@ -21,6 +21,7 @@ import {
   IonContent,
   IonButton,
   IonIcon,
+  IonAvatar,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -36,7 +37,8 @@ import {
     IonContent,
     IonButton,
     IonIcon,
-    CustomInputComponent
+    IonAvatar,
+    CustomInputComponent,
   ],
 })
 export class AddUpdateProductComponent implements OnInit {
@@ -53,11 +55,19 @@ export class AddUpdateProductComponent implements OnInit {
     private utilsService: UtilsService
   ) {
     addIcons({
-      checkmarkCircleOutline
+      checkmarkCircleOutline,
+      imageOutline,
     });
   }
 
   ngOnInit() {}
+
+  // Take a picture or select from gallery
+  async takeImage() {
+    const dataUrl = (await this.utilsService.takePicture('Product image'))
+      .dataUrl;
+    this.form.controls.image.setValue(dataUrl);
+  }
 
   async submit() {
     if (this.form.valid) {

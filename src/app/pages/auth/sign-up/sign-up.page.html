@@ -4,7 +4,7 @@
   <div class="d-flex-center">
     <form [formGroup]="form" class="auth-form" (submit)="submit()" (keypress.enter)="submit()">
       <app-logo></app-logo>
-    <!-- ////////////// NAME INPUT ////////////// -->
+      <!-- ////////////// NAME INPUT ////////////// -->
       <app-custom-input icon="person-outline" autocomplete="name" [control]="form.controls.name" type="text"
         label="Name"></app-custom-input>
       @if(form.controls.name.errors && form.controls.name.touched){
@@ -17,7 +17,7 @@
         }
       </div>
       }
-
+      <!-- ////////////// EMAIL INPUT ////////////// -->
       <app-custom-input icon="mail-outline" autocomplete="email" [control]="form.controls.email" type="email"
         label="Email"></app-custom-input>
       @if(form.controls.email.errors && form.controls.email.touched){
@@ -30,7 +30,7 @@
         }
       </div>
       }
-    <!-- ////////////// PASSWORD INPUT ////////////// -->
+      <!-- ////////////// PASSWORD INPUT ////////////// -->
       <app-custom-input icon="lock-closed-outline" [control]="form.controls.password" type="password"
         label="Password"></app-custom-input>
       @if(form.controls.password.errors && form.controls.password.touched){
