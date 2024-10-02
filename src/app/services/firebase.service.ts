@@ -8,14 +8,19 @@ import {
 } from '@angular/fire/auth';
 import { Firestore, setDoc, doc, getDoc } from '@angular/fire/firestore'; // Use Firestore from the modular SDK
 import { User } from '../models/user.model';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
-  constructor(private auth: Auth, private firestore: Firestore) {} // Use Firestore from modular SDK
+  constructor(private auth: Auth, private firestore: Firestore, private utilsService: UtilsService) {} // Use Firestore from modular SDK
 
   // -----> AUTHENTICATION <-----
+
+  getAut(){
+    return this.auth
+  }
   signin(user: User) {
     return signInWithEmailAndPassword(this.auth, user.email, user.password);
   }
@@ -35,6 +40,12 @@ export class FirebaseService {
       throw new Error('No user found with this email');
     }
     return sendPasswordResetEmail(this.auth, email);
+  }
+
+  signOut(){
+    this.auth.signOut()
+    localStorage.removeItem('user')
+    this.utilsService.routerLink('/auth')
   }
 
   // -----> DATABASE <-----
