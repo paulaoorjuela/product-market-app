@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   Auth,
   signInWithEmailAndPassword,
@@ -6,20 +6,37 @@ import {
   updateProfile,
   sendPasswordResetEmail,
 } from '@angular/fire/auth';
-import { Firestore, setDoc, doc, getDoc } from '@angular/fire/firestore'; // Use Firestore from the modular SDK
+import {
+  Firestore,
+  setDoc,
+  doc,
+  getDoc,
+  addDoc,
+  collection,
+} from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 import { UtilsService } from './utils.service';
+import {
+  Storage,
+  ref as storageRef,
+  uploadString,
+  getDownloadURL,
+} from '@angular/fire/storage'; // Use the new Storage API
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
-  constructor(private auth: Auth, private firestore: Firestore, private utilsService: UtilsService) {} // Use Firestore from modular SDK
+  constructor(
+    private auth: Auth,
+    private firestore: Firestore,
+    private utilsService: UtilsService,
+    private storage: Storage // Use the new Storage service
+  ) {}
 
   // -----> AUTHENTICATION <-----
-
-  getAut(){
-    return this.auth
+  getAuth() {
+    return this.auth;
   }
   signin(user: User) {
     return signInWithEmailAndPassword(this.auth, user.email, user.password);
@@ -42,10 +59,10 @@ export class FirebaseService {
     return sendPasswordResetEmail(this.auth, email);
   }
 
-  signOut(){
-    this.auth.signOut()
-    localStorage.removeItem('user')
-    this.utilsService.routerLink('/auth')
+  signOut() {
+    this.auth.signOut();
+    localStorage.removeItem('user');
+    this.utilsService.routerLink('/auth');
   }
 
   // -----> DATABASE <-----
@@ -55,5 +72,17 @@ export class FirebaseService {
 
   async getDocument(path: string) {
     return (await getDoc(doc(this.firestore, path))).data();
+  }
+
+  addDocument(path: string, data: any) {
+    return addDoc(collection(this.firestore, path), data);
+  }
+
+  // -----> STORAGE <-----
+  async uploadImage(path: string, data_url: string) {
+    const storageReference = storageRef(this.storage, path);
+    return uploadString(storageReference, data_url, 'data_url').then(() => {
+      return getDownloadURL(storageReference);
+    });
   }
 }

@@ -9,6 +9,7 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from './environments/environment';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { enableProdMode } from '@angular/core';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 
 if (environment.production) {
   enableProdMode();
@@ -24,6 +25,7 @@ bootstrapApplication(AppComponent, {
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
   ],
 }).then(() => {
   // Load custom Ionic PWA elements after the app has been bootstrapped

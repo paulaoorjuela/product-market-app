@@ -60,7 +60,11 @@ export class AddUpdateProductComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  user = {} as User;
+
+  ngOnInit() {
+    this.user = this.utilsService.getFromLocalStorage('user');
+  }
 
   // Take a picture or select from gallery
   async takeImage() {
@@ -71,20 +75,34 @@ export class AddUpdateProductComponent implements OnInit {
 
   async submit() {
     if (this.form.valid) {
+      let path = `users/${this.user.id}/products`;
+
       const loading = await this.utilsService.loading();
       await loading.present();
 
+      // -----> UPLOAD IMAGE AND OBTAIN URL <-----
+      let dataUrl = this.form.value.image;
+      let imagePath = `${this.user.id}/${Date.now()}`;
+      let imageUrl = await this.firebaseService.uploadImage(imagePath, dataUrl);
+      this.form.controls.image.setValue(imageUrl);
+      delete this.form.value.id;
+
       this.firebaseService
-        .signup(this.form.value as User)
+        .addDocument(path, this.form.value)
         .then(async (res) => {
-          await this.firebaseService.updateUser(this.form.value.name);
-          let id = res.user.uid;
+          this.utilsService.dismissModal({ success: true });
+          this.utilsService.presentToast({
+            message: 'Product created successfully',
+            duration: 1500,
+            color: 'success',
+            position: 'middle',
+            icon: 'checkmark-circle-outline',
+          });
         })
         .catch((error) => {
           console.log(error);
           this.utilsService.presentToast({
-            message:
-              'Invalid credentials, please check your email and password',
+            message: error.message,
             duration: 2500,
             color: 'primary',
             position: 'middle',

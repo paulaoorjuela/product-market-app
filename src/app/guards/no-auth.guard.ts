@@ -8,7 +8,7 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
   const utilsService = inject(UtilsService);
 
   return new Promise((resolve) => {
-    firebaseService.getAut().onAuthStateChanged((auth) => {
+    firebaseService.getAuth().onAuthStateChanged((auth) => {
       if (!auth) resolve(true);
       else {
         utilsService.routerLink('/main/home');
