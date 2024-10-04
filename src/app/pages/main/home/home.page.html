@@ -1,7 +1,8 @@
 <app-header title="Home"></app-header>
 
 <ion-content>
-
+  <!-- ///////////////////////////////// LIST PRODUCTS ///////////////////////////////// -->
+  @if(!loading){
   <ion-list>
     @for (product of products; track $index) {
     <ion-item-sliding class="product-item">
@@ -12,8 +13,8 @@
         <ion-label>
           <div class="name">{{product.name}}</div>
           <div class="data">
-            <strong>Price:  </strong>{{product.price | currency: 'USD'}}<br>
-            <strong>Sold Units:  </strong>{{product.soldUnits}}
+            <strong>Price: </strong>{{product.price | currency: 'USD'}}<br>
+            <strong>Sold Units: </strong>{{product.soldUnits}}
           </div>
           <ion-chip color="primary" mode="ios" outline="true">
             <ion-label>Profit: {{product.price * product.soldUnits | currency: 'USD'}}</ion-label>
@@ -27,15 +28,41 @@
           <ion-icon class="option-btn" name="create-outline"></ion-icon>
         </ion-item-option>
         <!-- DELETE -->
-        <ion-item-option color="danger">
+        <ion-item-option (click)="confirmDeleteProduct(product)" color="danger">
           <ion-icon class="option-btn" name="trash-outline"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
     }
   </ion-list>
+  }
 
-  <!-- ////////// add new product ////////// -->
+  <!-- ///////////////////////////////// WHILE LOADING ///////////////////////////////// -->
+  @if(loading){
+  <ion-list>
+    @for (1 of [1,1,1,1,1,1]; track $index) {
+    <ion-item class="product-item">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated style="width: 100%; height: 100%;"></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <div><ion-skeleton-text animated style="width: 50%"></ion-skeleton-text></div>
+        <div><ion-skeleton-text animated style="width: 30%"></ion-skeleton-text></div>
+
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>}
+
+  <!-- ////////// NO PRODUCTS AVAILABLE ////////// -->
+  @if(!loading && products.length === 0){
+  <div class="empty">
+    <ion-icon name="shield-outline"></ion-icon>
+    <h3>There are no products available yet</h3>
+  </div>
+  }
+
+  <!-- ////////// ADD NEW PRODUCT BUTTON ////////// -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addUpdateProduct()">
       <ion-icon name="add"></ion-icon>

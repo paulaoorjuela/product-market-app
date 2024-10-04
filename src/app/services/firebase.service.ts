@@ -15,7 +15,8 @@ import {
   collection,
   collectionData,
   query,
-  updateDoc
+  updateDoc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 import { UtilsService } from './utils.service';
@@ -25,13 +26,13 @@ import {
   getStorage,
   uploadString,
   getDownloadURL,
+  deleteObject,
 } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
-
   auth = inject(Auth);
   firestore = inject(Firestore);
   storage = inject(Storage);
@@ -77,6 +78,10 @@ export class FirebaseService {
     return updateDoc(doc(this.firestore, path), data);
   }
 
+  deleteDocument(path: string) {
+    return deleteDoc(doc(this.firestore, path));
+  }
+
   async getDocument(path: string) {
     return (await getDoc(doc(this.firestore, path))).data();
   }
@@ -115,5 +120,9 @@ export class FirebaseService {
 
   async getFilePath(url: string) {
     return ref(getStorage(), url).fullPath;
+  }
+
+  deleteFile(path: string) {
+    return deleteObject(ref(getStorage(), path));
   }
 }

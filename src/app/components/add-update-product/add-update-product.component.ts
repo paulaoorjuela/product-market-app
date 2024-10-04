@@ -84,6 +84,8 @@ export class AddUpdateProductComponent implements OnInit {
     }
   }
 
+// //////////////////////////// CREATE PRODUCT ////////////////////////////
+
   async createProduct() {
     let path = `users/${this.user.id}/products`;
 
@@ -124,6 +126,7 @@ export class AddUpdateProductComponent implements OnInit {
       });
   }
 
+  // //////////////////////////// UPDATE PRODUCT ////////////////////////////
   async updateProduct() {
     let path = `users/${this.user.id}/products/${this.product.id}`;
 

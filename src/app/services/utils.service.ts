@@ -6,6 +6,8 @@ import {
   ToastOptions,
   ModalController,
   ModalOptions,
+  AlertController,
+  AlertOptions
 } from '@ionic/angular/standalone';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
@@ -17,6 +19,7 @@ export class UtilsService {
   toastController = inject(ToastController);
   modalController = inject(ModalController);
   router = inject(Router);
+  alertController = inject(AlertController)
 
   async takePicture(promptLabelHeader: string) {
     return await Camera.getPhoto({
@@ -28,6 +31,14 @@ export class UtilsService {
       promptLabelPhoto: 'Select an image',
       promptLabelPicture:'Take a picture'
     });
+  }
+
+
+  // -----> alert <-----
+  async presentAlert(opts?: AlertOptions) {
+    const alert = await this.alertController.create(opts);
+
+    await alert.present();
   }
 
   loading() {
