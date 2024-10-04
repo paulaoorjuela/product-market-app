@@ -13,6 +13,8 @@ import {
   getDoc,
   addDoc,
   collection,
+  collectionData,
+  query,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 import { UtilsService } from './utils.service';
@@ -76,6 +78,11 @@ export class FirebaseService {
 
   addDocument(path: string, data: any) {
     return addDoc(collection(this.firestore, path), data);
+  }
+
+  getCollectioData(path: string, collectioQuery?:any) {
+    const ref =  collection(this.firestore, path)
+    return collectionData(query(ref, collectioQuery), { idField:'id'})
   }
 
   // -----> STORAGE <-----

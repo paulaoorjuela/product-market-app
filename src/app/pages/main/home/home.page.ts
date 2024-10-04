@@ -1,22 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButton,
-  IonFab,
-  IonFabButton,
-  IonIcon,
-} from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { HeaderComponent } from '../../../components/header/header.component';
-import { add } from 'ionicons/icons';
+import { add, createOutline, trashOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { AddUpdateProductComponent } from 'src/app/components/add-update-product/add-update-product.component';
+import { User } from 'src/app/models/user.model';
+import { Product } from 'src/app/models/product.model';
 
 @Component({
   selector: 'app-home',
@@ -24,18 +17,11 @@ import { AddUpdateProductComponent } from 'src/app/components/add-update-product
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
-    IonIcon,
-    IonFabButton,
-    IonFab,
-    IonButton,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
+    IonicModule,
     CommonModule,
     FormsModule,
     HeaderComponent,
-    AddUpdateProductComponent
+    AddUpdateProductComponent,
   ],
 })
 export class HomePage implements OnInit {
@@ -43,24 +29,39 @@ export class HomePage implements OnInit {
     private firebaseService: FirebaseService,
     private utilsService: UtilsService
   ) {
-    addIcons({ add });
+    addIcons({ add, createOutline, trashOutline });
   }
 
+  products: Product[] = [];
   ngOnInit() {
     addIcons({
       add,
     });
   }
 
-  signOut() {
-    this.firebaseService.signOut();
+  user(): User {
+    return this.utilsService.getFromLocalStorage('user');
+  }
+  ionViewWillEnter() {
+    this.getProducts();
+  }
+
+  getProducts() {
+    let path = `users/${this.user().id}/products`;
+    let sub = this.firebaseService.getCollectioData(path).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.products = res;
+        sub.unsubscribe();
+      },
+    });
   }
 
   // add or update product
   addUpdateProduct() {
     this.utilsService.presentModal({
       component: AddUpdateProductComponent,
-      cssClass:'add-update-modal',
-    })
+      cssClass: 'add-update-modal',
+    });
   }
 }

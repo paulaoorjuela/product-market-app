@@ -1,6 +1,37 @@
 <app-header title="Home"></app-header>
 
 <ion-content>
+
+  <ion-list>
+    @for (product of products; track $index) {
+    <ion-item-sliding class="product-item">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img [src]="product.image" />
+        </ion-avatar>
+        <ion-label>
+          <div class="name">{{product.name}}</div>
+          <div class="data">
+            <strong>Price:</strong>$ {{product.price | currency: 'USD'}}<br>
+            <strong>Sold Units:</strong>{{product.soldUnits}}
+          </div>
+        </ion-label>
+      </ion-item>
+      <!-- OPTIONS -->
+      <ion-item-options>
+        <!-- UPDATE -->
+        <ion-item-option>
+          <ion-icon class="option-btn" name="create-outline"></ion-icon>
+        </ion-item-option>
+        <!-- DELETE -->
+        <ion-item-option color="danger">
+          <ion-icon class="option-btn" name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+    }
+  </ion-list>
+
   <!-- ------------ add new product ------------ -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addUpdateProduct()">

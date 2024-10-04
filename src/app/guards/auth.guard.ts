@@ -11,8 +11,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   return new Promise((resolve) => {
     firebaseService.getAuth().onAuthStateChanged((auth) => {
-      if (auth && user) {
-        resolve(true);
+      if (auth) {
+        if(user)resolve(true);
       } else {
         utilsService.routerLink('/auth');
         resolve(false);
