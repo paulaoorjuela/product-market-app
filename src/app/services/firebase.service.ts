@@ -15,28 +15,29 @@ import {
   collection,
   collectionData,
   query,
+  updateDoc
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 import { UtilsService } from './utils.service';
+import { Storage } from '@angular/fire/storage';
 import {
-  Storage,
-  ref as storageRef,
+  ref,
+  getStorage,
   uploadString,
   getDownloadURL,
-} from '@angular/fire/storage'; // Use the new Storage API
+} from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
-  constructor(
-    private auth: Auth,
-    private firestore: Firestore,
-    private utilsService: UtilsService,
-    private storage: Storage // Use the new Storage service
-  ) {}
 
-  // -----> AUTHENTICATION <-----
+  auth = inject(Auth);
+  firestore = inject(Firestore);
+  storage = inject(Storage);
+  utilsService = inject(UtilsService);
+
+  // //////////////// -----> AUTHENTICATION <----- ////////////////
   getAuth() {
     return this.auth;
   }
@@ -67,9 +68,13 @@ export class FirebaseService {
     this.utilsService.routerLink('/auth');
   }
 
-  // -----> DATABASE <-----
+  // //////////////// -----> DATABASE <----- ////////////////
   setDocument(path: string, data: any) {
     return setDoc(doc(this.firestore, path), data);
+  }
+
+  updateDocument(path: string, data: any) {
+    return updateDoc(doc(this.firestore, path), data);
   }
 
   async getDocument(path: string) {
@@ -80,16 +85,35 @@ export class FirebaseService {
     return addDoc(collection(this.firestore, path), data);
   }
 
-  getCollectioData(path: string, collectioQuery?:any) {
-    const ref =  collection(this.firestore, path)
-    return collectionData(query(ref, collectioQuery), { idField:'id'})
+  getCollectioData(path: string, collectioQuery?: any) {
+    const ref = collection(this.firestore, path);
+    return collectionData(query(ref, collectioQuery), { idField: 'id' });
   }
 
-  // -----> STORAGE <-----
+  // //////////////// -----> STORAGE <----- ////////////////
+
+  // async uploadImage(path: string, data_url: string) {
+  //   const storageReference = storageRef(this.storage, path);
+  //   return uploadString(storageReference, data_url, 'data_url').then(() => {
+  //     return getDownloadURL(storageReference);
+  //   });
+  // }
+
   async uploadImage(path: string, data_url: string) {
-    const storageReference = storageRef(this.storage, path);
-    return uploadString(storageReference, data_url, 'data_url').then(() => {
-      return getDownloadURL(storageReference);
-    });
+    return uploadString(ref(getStorage(), path), data_url, 'data_url').then(
+      () => {
+        return getDownloadURL(ref(getStorage(), path));
+      }
+    );
+  }
+
+  // // --- Obtain the image path and its url ---
+  // getFilePath(url: string) {
+  //   const storageReference = storageRef(this.storage, url);
+  //   return storageReference.fullPath;
+  // }
+
+  async getFilePath(url: string) {
+    return ref(getStorage(), url).fullPath;
   }
 }

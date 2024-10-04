@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -23,6 +23,7 @@ import {
   IonIcon,
   IonAvatar,
 } from '@ionic/angular/standalone';
+import { Product } from 'src/app/models/product.model';
 
 @Component({
   selector: 'app-add-update-product',
@@ -42,12 +43,14 @@ import {
   ],
 })
 export class AddUpdateProductComponent implements OnInit {
+  @Input() product: Product;
+
   form = new FormGroup({
     id: new FormControl(''),
     image: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    price: new FormControl('', [Validators.required, Validators.min(0)]),
-    soldUnits: new FormControl('', [Validators.required, Validators.min(0)]),
+    price: new FormControl(null, [Validators.required, Validators.min(0)]),
+    soldUnits: new FormControl(null, [Validators.required, Validators.min(0)]),
   });
 
   constructor(
@@ -64,6 +67,7 @@ export class AddUpdateProductComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.utilsService.getFromLocalStorage('user');
+    if (this.product) this.form.setValue(this.product);
   }
 
   // Take a picture or select from gallery
@@ -73,45 +77,95 @@ export class AddUpdateProductComponent implements OnInit {
     this.form.controls.image.setValue(dataUrl);
   }
 
-  async submit() {
+  submit() {
     if (this.form.valid) {
-      let path = `users/${this.user.id}/products`;
+      if (this.product) this.updateProduct();
+      else this.createProduct();
+    }
+  }
 
-      const loading = await this.utilsService.loading();
-      await loading.present();
+  async createProduct() {
+    let path = `users/${this.user.id}/products`;
 
-      // -----> UPLOAD IMAGE AND OBTAIN URL <-----
+    const loading = await this.utilsService.loading();
+    await loading.present();
+
+    // -----> UPLOAD IMAGE AND OBTAIN URL <-----
+    let dataUrl = this.form.value.image;
+    let imagePath = `${this.user.id}/${Date.now()}`;
+    let imageUrl = await this.firebaseService.uploadImage(imagePath, dataUrl);
+    this.form.controls.image.setValue(imageUrl);
+    delete this.form.value.id;
+
+    this.firebaseService
+      .addDocument(path, this.form.value)
+      .then(async (res) => {
+        this.utilsService.dismissModal({ success: true });
+        this.utilsService.presentToast({
+          message: 'Product created successfully',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline',
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.utilsService.presentToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline',
+        });
+      })
+      .finally(() => {
+        loading.dismiss();
+      });
+  }
+
+  async updateProduct() {
+    let path = `users/${this.user.id}/products/${this.product.id}`;
+
+    const loading = await this.utilsService.loading();
+    await loading.present();
+
+    // -----> UPLOAD IMAGE AND OBTAIN URL, IF THE IMAGE HAS CHANGED <-----
+    if (this.form.value.image !== this.product.image) {
       let dataUrl = this.form.value.image;
-      let imagePath = `${this.user.id}/${Date.now()}`;
+      let imagePath = await this.firebaseService.getFilePath(
+        this.product.image
+      );
       let imageUrl = await this.firebaseService.uploadImage(imagePath, dataUrl);
       this.form.controls.image.setValue(imageUrl);
-      delete this.form.value.id;
-
-      this.firebaseService
-        .addDocument(path, this.form.value)
-        .then(async (res) => {
-          this.utilsService.dismissModal({ success: true });
-          this.utilsService.presentToast({
-            message: 'Product created successfully',
-            duration: 1500,
-            color: 'success',
-            position: 'middle',
-            icon: 'checkmark-circle-outline',
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.utilsService.presentToast({
-            message: error.message,
-            duration: 2500,
-            color: 'primary',
-            position: 'middle',
-            icon: 'alert-circle-outline',
-          });
-        })
-        .finally(() => {
-          loading.dismiss();
-        });
     }
+
+    delete this.form.value.id;
+
+    this.firebaseService
+      .updateDocument(path, this.form.value)
+      .then(async (res) => {
+        this.utilsService.dismissModal({ success: true });
+        this.utilsService.presentToast({
+          message: 'Product updated successfully',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline',
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.utilsService.presentToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline',
+        });
+      })
+      .finally(() => {
+        loading.dismiss();
+      });
   }
 }

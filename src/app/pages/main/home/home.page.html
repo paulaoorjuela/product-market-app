@@ -12,15 +12,18 @@
         <ion-label>
           <div class="name">{{product.name}}</div>
           <div class="data">
-            <strong>Price:</strong>$ {{product.price | currency: 'USD'}}<br>
-            <strong>Sold Units:</strong>{{product.soldUnits}}
+            <strong>Price:  </strong>{{product.price | currency: 'USD'}}<br>
+            <strong>Sold Units:  </strong>{{product.soldUnits}}
           </div>
+          <ion-chip color="primary" mode="ios" outline="true">
+            <ion-label>Profit: {{product.price * product.soldUnits | currency: 'USD'}}</ion-label>
+          </ion-chip>
         </ion-label>
       </ion-item>
-      <!-- OPTIONS -->
+      <!-- ////////// OPTIONS ////////// -->
       <ion-item-options>
         <!-- UPDATE -->
-        <ion-item-option>
+        <ion-item-option (click)="addUpdateProduct(product)">
           <ion-icon class="option-btn" name="create-outline"></ion-icon>
         </ion-item-option>
         <!-- DELETE -->
@@ -32,7 +35,7 @@
     }
   </ion-list>
 
-  <!-- ------------ add new product ------------ -->
+  <!-- ////////// add new product ////////// -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addUpdateProduct()">
       <ion-icon name="add"></ion-icon>
