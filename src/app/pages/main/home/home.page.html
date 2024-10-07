@@ -4,6 +4,18 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  @if(!loading && products.length){
+  <ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center">
+    <div>
+      <h5>{{products.length}}</h5>
+      <p>Products</p>
+    </div>
+    <div>
+      <h5>{{getProfits() | currency: 'USD'}}</h5>
+      <p>Total profits</p>
+    </div>
+  </ion-card>
+  }
   <!-- ///////////////////////////////// LIST PRODUCTS ///////////////////////////////// -->
   @if(!loading){
   <ion-list>

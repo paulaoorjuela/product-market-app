@@ -54,12 +54,17 @@ export class HomePage implements OnInit {
   ionViewWillEnter() {
     this.getProducts();
   }
-
+  // ///////// REFRESHER //////////
   doRefresh(event) {
     setTimeout(() => {
-      this.getProducts()
+      this.getProducts();
       event.target.complete();
     }, 1000);
+  }
+
+  // ///////// OBTAIN TOTAL PROFITS //////////
+  getProfits() {
+    return this.products.reduce((index, product) => index + product.price * product.soldUnits, 0)
   }
 
   // //////////////////////////// GET PRODUCT ////////////////////////////
