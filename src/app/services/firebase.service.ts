@@ -92,7 +92,7 @@ export class FirebaseService {
 
   getCollectioData(path: string, collectioQuery?: any) {
     const ref = collection(this.firestore, path);
-    return collectionData(query(ref, collectioQuery), { idField: 'id' });
+    return collectionData(query(ref, ...collectioQuery), { idField: 'id' });
   }
 
   // //////////////// -----> STORAGE <----- ////////////////

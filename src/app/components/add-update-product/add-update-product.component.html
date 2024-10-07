@@ -33,7 +33,8 @@
     }
 
     <!-- ////////////// PRICE INPUT ////////////// -->
-    <app-custom-input [control]="form.controls.price" type="number" label="Price"></app-custom-input>
+    <app-custom-input [control]="form.controls.price" type="number" label="Price"
+      (ionInput)="setNumberInputs()"></app-custom-input>
     @if(form.controls.price.errors && form.controls.price.touched){
     <div class="validators">
       @if(form.controls.price.errors['required']){
@@ -46,7 +47,8 @@
     }
 
     <!-- ////////////// SOLD UNITS INPUT ////////////// -->
-    <app-custom-input [control]="form.controls.soldUnits" type="number" label="Sold units"></app-custom-input>
+    <app-custom-input [control]="form.controls.soldUnits" type="number" label="Sold units"
+      (ionInput)="setNumberInputs()"></app-custom-input>
     @if(form.controls.soldUnits.errors && form.controls.soldUnits.touched){
     <div class="validators">
       @if(form.controls.soldUnits.errors['required']){

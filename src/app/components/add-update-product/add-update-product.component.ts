@@ -83,6 +83,12 @@ export class AddUpdateProductComponent implements OnInit {
       else this.createProduct();
     }
   }
+// -----> CONVERT STRING TO NUMBER <-----
+  setNumberInputs(){
+    let {soldUnits, price} = this.form.controls
+    if(soldUnits.value) soldUnits.setValue(parseFloat(soldUnits.value))
+    if(price.value) price.setValue(parseFloat(price.value))
+  }
 
 // //////////////////////////// CREATE PRODUCT ////////////////////////////
 

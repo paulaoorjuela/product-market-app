@@ -5,11 +5,18 @@ import { IonicModule } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { HeaderComponent } from '../../../components/header/header.component';
-import { add, createOutline, shieldOutline, trashOutline } from 'ionicons/icons';
+import {
+  add,
+  createOutline,
+  shieldOutline,
+  trashOutline,
+} from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { AddUpdateProductComponent } from 'src/app/components/add-update-product/add-update-product.component';
 import { User } from 'src/app/models/user.model';
 import { Product } from 'src/app/models/product.model';
+import { Firestore } from '@angular/fire/firestore';
+import { orderBy, where } from 'firebase/firestore';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +34,8 @@ import { Product } from 'src/app/models/product.model';
 export class HomePage implements OnInit {
   constructor(
     private firebaseService: FirebaseService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private firestore: Firestore
   ) {
     addIcons({ add, createOutline, trashOutline, shieldOutline });
   }
@@ -47,11 +55,24 @@ export class HomePage implements OnInit {
     this.getProducts();
   }
 
+  doRefresh(event) {
+    setTimeout(() => {
+      this.getProducts()
+      event.target.complete();
+    }, 1000);
+  }
+
   // //////////////////////////// GET PRODUCT ////////////////////////////
   getProducts() {
     let path = `users/${this.user().id}/products`;
     this.loading = true;
-    let sub = this.firebaseService.getCollectioData(path).subscribe({
+
+    const query = [
+      orderBy('soldUnits', 'desc'),
+      // where('soldUnits', '>', 3)
+    ];
+
+    let sub = this.firebaseService.getCollectioData(path, query).subscribe({
       next: (res: any) => {
         console.log(res);
         this.products = res;
