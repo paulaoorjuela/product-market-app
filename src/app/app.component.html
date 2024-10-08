@@ -3,15 +3,23 @@
   <ion-content>
     @for (page of pages; track $index) {
     <ion-menu-toggle auto-hide="false">
-      <ion-item [routerLink]="page.url" routerDirection="root" detail>
+      <ion-item [ngClass]="{'active': currentPath === page.url}" [routerLink]="page.url" routerDirection="root" detail>
         <ion-icon id="menu-icon" slot="start" [name]="page.icon"></ion-icon>
         <ion-label>{{page.title}}</ion-label>
       </ion-item>
     </ion-menu-toggle>
     }
   </ion-content>
+
+  <ion-footer class="ion-no-border safe-p-bottom">
+    <ion-menu-toggle auto-hide="false">
+      <ion-item (click)="signOut()" lines="none">
+        <ion-icon id="menu-icon" slot="start" name="log-out-outline"></ion-icon>
+        <ion-label>Log out</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+  </ion-footer>
 </ion-menu>
 
 <!-- Main content area of the app -->
 <ion-router-outlet id="menu-content" main></ion-router-outlet>
-
