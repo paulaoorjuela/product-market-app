@@ -1,3 +1,17 @@
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
-</ion-app>
+<ion-menu contentId="menu-content" menuId="menu-content" side="start" swipeGesture="true">
+  <app-header title="Menu"></app-header>
+  <ion-content>
+    @for (page of pages; track $index) {
+    <ion-menu-toggle auto-hide="false">
+      <ion-item [routerLink]="page.url" routerDirection="root" detail>
+        <ion-icon id="menu-icon" slot="start" [name]="page.icon"></ion-icon>
+        <ion-label>{{page.title}}</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+    }
+  </ion-content>
+</ion-menu>
+
+<!-- Main content area of the app -->
+<ion-router-outlet id="menu-content" main></ion-router-outlet>
+

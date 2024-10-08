@@ -11,6 +11,9 @@
         <ion-icon name="close-circle-outline"></ion-icon>
       </ion-button>
       }
+      @if(showMenu){
+      <ion-menu-button menu="menu-content"></ion-menu-button>
+      }
     </ion-buttons>
     <ion-title>
       <strong>{{title}}</strong>

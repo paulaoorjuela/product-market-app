@@ -7,13 +7,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { CustomInputComponent } from 'src/app/components/custom-input/custom-input.component';
-import { LogoComponent } from 'src/app/components/logo/logo.component';
-import { RouterLink } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { User } from 'src/app/models/user.model';
 import { UtilsService } from 'src/app/services/utils.service';
