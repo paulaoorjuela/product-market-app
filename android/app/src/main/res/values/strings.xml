@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">product-market-app</string>
+    <string name="title_activity_main">product-market-app</string>
+    <string name="package_name">com.paula.productmarketapp</string>
+    <string name="custom_url_scheme">com.paula.productmarketapp</string>
+</resources>

@@ -1,8 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   IonApp,
   IonRouterOutlet,
   IonIcon,
+  IonAvatar,
   IonLabel,
   IonContent,
   IonMenu,
@@ -13,12 +14,13 @@ import {
   IonFooter,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, logOutOutline, personOutline } from 'ionicons/icons';
+import { homeOutline, logOutOutline, personOutline, personCircleOutline } from 'ionicons/icons';
 import { HeaderComponent } from './components/header/header.component';
 import { Router, RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { FirebaseService } from './services/firebase.service';
 import { UtilsService } from './services/utils.service';
+import { User } from './models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +35,7 @@ import { UtilsService } from './services/utils.service';
     IonContent,
     IonLabel,
     IonIcon,
+    IonAvatar,
     IonMenu,
     IonMenuToggle,
     IonApp,
@@ -48,11 +51,7 @@ export class AppComponent {
     private firebaseService: FirebaseService,
     private utilsService: UtilsService
   ) {
-    addIcons({
-      homeOutline,
-      personOutline,
-      logOutOutline,
-    });
+    addIcons({personCircleOutline,logOutOutline,homeOutline,personOutline,});
   }
 
   pages = [
@@ -65,6 +64,10 @@ export class AppComponent {
     this.router.events.subscribe((event: any) => {
       if (event?.url) this.currentPath = event.url;
     });
+  }
+
+  user(): User {
+    return this.utilsService.getFromLocalStorage('user');
   }
 
   signOut(){

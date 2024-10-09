@@ -10,6 +10,7 @@ import { environment } from './environments/environment';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { enableProdMode } from '@angular/core';
 import { provideStorage, getStorage } from '@angular/fire/storage';
+import { Keyboard } from '@capacitor/keyboard';
 
 if (environment.production) {
   enableProdMode();
@@ -30,4 +31,13 @@ bootstrapApplication(AppComponent, {
 }).then(() => {
   // Load custom Ionic PWA elements after the app has been bootstrapped
   defineCustomElements(window);
+
+  // Keyboard event listeners
+  Keyboard.addListener('keyboardWillShow', () => {
+    document.body.classList.add('keyboard-open');
+  });
+
+  Keyboard.addListener('keyboardWillHide', () => {
+    document.body.classList.remove('keyboard-open');
+  });
 });

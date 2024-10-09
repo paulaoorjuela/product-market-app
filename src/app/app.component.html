@@ -1,6 +1,14 @@
 <ion-menu contentId="menu-content" menuId="menu-content" side="start" swipeGesture="true">
   <app-header title="Menu"></app-header>
-  <ion-content>
+  <ion-content class="ion-text-center">
+    <ion-avatar>
+      @if(!user()?.image){
+      <ion-icon class="empty-icon" name="person-circle-outline"></ion-icon>
+      }@else {
+      <img [src]="user()?.image" />
+      }
+    </ion-avatar>
+    <h4>{{user()?.name}}</h4>
     @for (page of pages; track $index) {
     <ion-menu-toggle auto-hide="false">
       <ion-item [ngClass]="{'active': currentPath === page.url}" [routerLink]="page.url" routerDirection="root" detail>

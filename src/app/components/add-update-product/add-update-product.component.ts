@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
+import { alertCircleOutline, checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { CustomInputComponent } from 'src/app/components/custom-input/custom-input.component';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -56,6 +56,7 @@ export class AddUpdateProductComponent implements OnInit {
   ) {
     addIcons({
       checkmarkCircleOutline,
+      alertCircleOutline,
       imageOutline,
     });
   }
